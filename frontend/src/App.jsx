@@ -1,13 +1,24 @@
+import Dashboard from "./Component/Dashboard";
 import Login from "./Component/Login";
+import Employee from "./Component/Employee";
+import Profile from "./Component/Profile";
+import Home from "./Component/Home";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <>
-      <div>
-        {" "}
-        <Login />
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />}>
+          <Route path="" element={<Home />} />
+          <Route path="/employee" element={<Employee />} />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/login" element={<Login />}>
+          {" "}
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
