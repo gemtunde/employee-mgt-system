@@ -16,7 +16,7 @@ const Login = () => {
       //console.log(values);
       const res = await axios.post("http://localhost:8081/login", values);
       //console.log(res.data);
-      if (res.data.status === "success") {
+      if (res.data.message === "success") {
         navigate("/");
       } else {
         setError(res.data.message);

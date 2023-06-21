@@ -3,6 +3,7 @@ import Login from "./Component/Login";
 import Employee from "./Component/Employee";
 import Profile from "./Component/Profile";
 import Home from "./Component/Home";
+import AddEmployee from "./Component/AddEmployee";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route path="" element={<Home />} />
           <Route path="/employee" element={<Employee />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create" element={<AddEmployee />} />
         </Route>
         <Route path="/login" element={<Login />}>
           {" "}
