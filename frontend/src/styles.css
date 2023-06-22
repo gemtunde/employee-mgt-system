@@ -11,3 +11,8 @@
 .main {
     height: 625px;
 }
+.employee_image{
+    width: 45px;
+    height: 45px;
+    border-radius : 100% ;
+}

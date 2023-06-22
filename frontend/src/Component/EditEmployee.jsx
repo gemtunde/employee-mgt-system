@@ -1,51 +1,50 @@
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AddEmployee = () => {
+const EditEmployee = () => {
   //const [error, setError] = useState("");
 
   const [data, setData] = useState({
     name: "",
     email: "",
-    password: "",
     salary: "",
     address: "",
-    image: "",
   });
-
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8081/get/${id}`)
+      .then((res) => {
+        setData({
+          ...data,
+          name: res.data.Result[0].name,
+          email: res.data.Result[0].email,
+          salary: res.data.Result[0].salary,
+          address: res.data.Result[0].address,
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      // console.log(data);
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formData.append("salary", data.salary);
-      formData.append("address", data.address);
-      formData.append("image", data.image);
 
-      const res = await axios.post("http://localhost:8081/create", formData);
+      const res = await axios.put(`http://localhost:8081/update/${id}`, data);
       console.log(res);
       if (res.status === 200) {
         navigate("/employee");
       }
-      //   if (res.data.message === "success") {
-      //     console.log(res);
-      //     navigate("/employee");
-      //   } else {
-      //     setError(res.data.message);
-      //   }
     } catch (error) {
       console.log(error);
     }
   };
   return (
     <div className="d-flex flex-column align-items-center pt-5">
-      <h2>Add Employees</h2>
+      <h2>Update Employee</h2>
       {/* <div className="text-danger">{error && error}</div> */}
       <form onSubmit={handleSubmit} className="row g-3 w-50">
         <div className="col-12">
@@ -59,6 +58,7 @@ const AddEmployee = () => {
             id="inputName4"
             onChange={(e) => setData({ ...data, name: e.target.value })}
             autoComplete="off"
+            value={data.name}
           />
         </div>
         <div className="col-12">
@@ -72,19 +72,7 @@ const AddEmployee = () => {
             id="inputEmail4"
             onChange={(e) => setData({ ...data, email: e.target.value })}
             autoComplete="off"
-          />
-        </div>
-        <div className="col-12">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Enter Password"
-            id="inputPassword4"
-            onChange={(e) => setData({ ...data, password: e.target.value })}
-            autoComplete="off"
+            value={data.email}
           />
         </div>
         <div className="col-12">
@@ -98,6 +86,7 @@ const AddEmployee = () => {
             id="inputSalary4"
             onChange={(e) => setData({ ...data, salary: e.target.value })}
             autoComplete="off"
+            value={data.salary}
           />
         </div>
         <div className="col-12">
@@ -111,9 +100,10 @@ const AddEmployee = () => {
             id="inputAddress4"
             onChange={(e) => setData({ ...data, address: e.target.value })}
             autoComplete="off"
+            value={data.address}
           />
         </div>
-        <div className="col-12">
+        {/* <div className="col-12">
           <label htmlFor="inputGroupFile01" className="form-label">
             Select Image
           </label>
@@ -124,10 +114,10 @@ const AddEmployee = () => {
             onChange={(e) => setData({ ...data, image: e.target.files[0] })}
             autoComplete="off"
           />
-        </div>
+        </div> */}
         <div className="col-12">
           <button type="submit" className="btn btn-success w-100">
-            Create
+            Update Employee
           </button>
         </div>
       </form>
@@ -135,4 +125,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default EditEmployee;

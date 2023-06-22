@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+app.use(express.static("public"));
 
 
 const con = mysql.createConnection({
@@ -58,13 +59,14 @@ app.post("/login", (req, res) => {
 
 //create - signup
 app.post("/create", upload.single("image"), (req, res) => {
-   const sql = "INSERT INTO employee (`name`, `email`,`password`,`address`,`image`) VALUES (?)";
+   const sql = "INSERT INTO employee (`name`, `email`,`password`,`salary`,`address`,`image`) VALUES (?)";
    bcrypt.hash(req.body.password.toString(), 10, (err, hash)=> {
         if(err) return res.json({message : "Error in hashing password"});
         const values = [
             req.body.name,
             req.body.email,
             hash,
+            req.body.salary,
             req.body.address,
             req.file.filename,
         ];
@@ -73,7 +75,49 @@ app.post("/create", upload.single("image"), (req, res) => {
             return res.json({message : "success", user : result});
         })
    })
+});
+
+// All getemployees
+app.get("/getEmployee", (req, res) => {
+    const sql = "SELECT * FROM employee";
+    con.query(sql, (err, result) => {
+        if(err) return res.json({message : "Get an Employee Error "});
+        if(result.length === 0) return res.json({message : "No employee records found"});
+        return res.json({Status :"Success", Result:result})
+    })
 })
+// get single employee
+app.get(`/get/:id`, (req, res) => {
+    const id = req.params.id ;
+    const sql = "SELECT * FROM employee Where id = ?";
+    con.query(sql, [id], (err, result) => {
+        if(err) return res.json({message : "Get an Employee Error "});
+        if(result.length === 0) return res.json({message : "No employee records found"});
+        return res.json({Status :"Success", Result:result})
+    })
+});
+
+
+//update employee
+app.put("/update/:id", (req, res) => {
+    const id = req.params.id ;
+    const sql = "UPDATE employee set salary=? WHERE id = ?";
+    con.query(sql, [req.body.salary, id], (err, result) => {
+         if(err) return res.json({message : "Update Employee Error "});
+        return res.json({Status :"Success"})
+    })
+});
+//delete employee
+app.delete("/delete/:id", (req, res) => {
+    const id = req.params.id ;
+    const sql = "DELETE FROM employee WHERE id = ?";
+    con.query(sql, [id], (err, result) => {
+         if(err) return res.json({message : "DELETE Employee Error "});
+        return res.json({Status :"Success"})
+    })
+});
+
+
 
 app.listen(8081, ()=> {
   console.log("Server Running")
