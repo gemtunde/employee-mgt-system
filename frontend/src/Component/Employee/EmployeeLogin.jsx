@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const EmployeeLogin = () => {
   const [error, setError] = useState("");
   const [values, setValues] = useState({
     email: "",
@@ -15,12 +15,16 @@ const Login = () => {
     try {
       e.preventDefault();
       //console.log(values);
-      const res = await axios.post("http://localhost:8081/login", values);
+      const res = await axios.post(
+        "http://localhost:8081/employee-login",
+        values
+      );
       //console.log(res.data);
       if (res.data.Status === "Success") {
-        navigate("/");
+        const id = res.data.id;
+        navigate(`/employee-detail/${id}`);
       } else {
-        setError(res.data.message);
+        setError(res.data.Error);
       }
     } catch (error) {
       console.log(error);
@@ -32,12 +36,9 @@ const Login = () => {
         <div className="text-danger">
           <h2>{error && error}</h2>
         </div>
-        <h2>Admin Login</h2>
+        <h2>Employee Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="email">
-              <strong>Email</strong>
-            </label>
             <input
               type="email"
               placeholder="enter email"
@@ -47,9 +48,6 @@ const Login = () => {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="password">
-              <strong>Email</strong>
-            </label>
             <input
               type="password"
               placeholder="enter password"
@@ -66,10 +64,10 @@ const Login = () => {
           </button>
           <p>You agree to out terms and conditions</p>
           <Link
-            to="/landing-page"
+            to="/login"
             className="btn btn-danger w-100 text-decoration-none rounded-0"
           >
-            Employee Login{" "}
+            Admin Login{" "}
           </Link>
         </form>
       </div>
@@ -77,4 +75,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default EmployeeLogin;

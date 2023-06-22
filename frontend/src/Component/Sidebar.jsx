@@ -1,6 +1,19 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const navigate = useNavigate("");
+
+  const handleLogout = () => {
+    axios
+      .get("http://localhost:8081/logout")
+      .then((res) => {
+        if (res.data.Status === "Success") {
+          navigate("/login");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
       <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
@@ -61,8 +74,9 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/logout"
+              to="/login"
               className="nav-link px-0 align-middle text-white"
+              onClick={handleLogout}
             >
               <i className="fs-4 bi-people"></i>{" "}
               <span className="ms-1 d-none d-sm-inline">Logout</span>{" "}
