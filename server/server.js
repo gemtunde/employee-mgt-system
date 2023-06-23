@@ -201,6 +201,17 @@ app.post("/employee-login", (req, res) => {
     })
 });
 
+// get single employee as admin
+app.get(`/get/:id`, (req, res) => {
+    const id = req.params.id ;
+    const sql = "SELECT * FROM employee Where id = ?";
+    con.query(sql, [id], (err, result) => {
+        if(err) return res.json({message : "Get an Employee Error "});
+        if(result.length === 0) return res.json({message : "No employee records found"});
+        return res.json({Status :"Success", Result:result})
+    })
+});
+
 
 app.listen(8081, ()=> {
   console.log("Server Running")
